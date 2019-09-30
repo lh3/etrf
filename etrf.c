@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <assert.h>
 #include <limits.h>
@@ -172,7 +173,7 @@ int main(int argc, char *argv[])
 	gzFile fp;
 	kseq_t *ks;
 	ketopt_t o = KETOPT_INIT;
-	int c, ret, min_len = 10, max_motif_len = 100;
+	int c, ret, min_len = 13, max_motif_len = 100;
 
 	while ((c = ketopt(&o, argc, argv, 1, "l:m:", 0)) >= 0) {
 		if (c == 'l') min_len = atoi(o.arg);
