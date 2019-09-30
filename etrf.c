@@ -112,15 +112,17 @@ static etrf_elem_t *trf_k(int *n_, int *m_, etrf_elem_t *a, int min_reg_len, int
 
 static void select_reg(int n, etrf_elem_t *a, int max)
 {
-	int i, i0, i00;
+	int i, i0, i00, j;
 	for (i = 0; i < n; ++i)
 		if (a[i].en <= max) break;
 	if (i == n) return;
 	for (i00 = i0 = i, i = i + 1; i <= n; ++i) {
 		if (a[i].en > max) continue;
 		if (i == n || a[i].st >= a[i0].en) {
-			if (i0 - i00 - 1 > 0)
-				select_reg(i0 - i00 - 1, &a[i00 + 1], a[i0].st);
+			for (j = i00 + 1; j < i0; ++j)
+				if (a[i00].en <= a[j].st) break;
+			if (i0 - j > 0)
+				select_reg(i0 - j, &a[j], a[i0].st);
 			a[i0].keep = 1;
 			i00 = i0, i0 = i;
 		} else {
@@ -158,7 +160,7 @@ static void process_seq(int max_motif_len, int min_len, const char *name, int le
 	n_a = k;
 	motif = (char*)malloc(max_motif_len + 1);
 	for (i = 0; i < n_a; ++i) {
-		get_motif(seq, a, motif);
+		get_motif(seq, &a[i], motif);
 		printf("%s\t%d\t%d\t%d\t%s\n", name, a[i].st, a[i].en, a[i].k, motif);
 	}
 	free(motif);
@@ -172,13 +174,16 @@ int main(int argc, char *argv[])
 	ketopt_t o = KETOPT_INIT;
 	int c, ret, min_len = 10, max_motif_len = 100;
 
-	while ((c = ketopt(&o, argc, argv, 1, "l:u:", 0)) >= 0) {
+	while ((c = ketopt(&o, argc, argv, 1, "l:m:", 0)) >= 0) {
 		if (c == 'l') min_len = atoi(o.arg);
-		else if (c == 'u') max_motif_len = atoi(o.arg);
+		else if (c == 'm') max_motif_len = atoi(o.arg);
 	}
 
 	if (o.ind == argc) {
 		fprintf(stderr, "Usage: etrf [options] <in.fa>\n");
+		fprintf(stderr, "Options:\n");
+		fprintf(stderr, "  -m INT    max motif length [%d]\n", max_motif_len);
+		fprintf(stderr, "  -l INT    min region length [%d]\n", min_len);
 		return 1;
 	}
 	fp = strcmp(argv[o.ind], "-")? gzopen(argv[o.ind], "r") : gzdopen(0, "r");
