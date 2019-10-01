@@ -93,22 +93,22 @@ KRADIX_SORT_INIT(etrf, etrf_elem_t, etrf_elem_key, 4)
 static etrf_elem_t *trf_k(int *n_, int *m_, etrf_elem_t *a, int min_reg_len, int k, int len, const uint8_t *str)
 {
 	int i, n = *n_, m = *m_, streak = 0;
-    for (i = k; i <= len; ++i) {
-        if (i < len && str[i] == str[i - k] && str[i] < 4) {
-            ++streak;
-        } else {
-            if (streak >= k && streak + k >= min_reg_len) {
+	for (i = k; i <= len; ++i) {
+		if (i < len && str[i] == str[i - k] && str[i] < 4) {
+			++streak;
+		} else {
+			if (streak >= k && streak + k >= min_reg_len) {
 				if (n == m) {
 					m = m < 16? 16 : m + (m<<1);
 					a = (etrf_elem_t*)realloc(a, sizeof(etrf_elem_t) * m);
 				}
 				a[n].st = i - streak - k, a[n].en = i, a[n].keep = 0, a[n++].k = k;
 			}
-            streak = 0;
-        }
-    }
+			streak = 0;
+		}
+	}
 	*n_ = n, *m_ = m;
-    return a;
+	return a;
 }
 
 static void select_reg(int n, etrf_elem_t *a, int max)
