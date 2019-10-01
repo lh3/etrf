@@ -4,7 +4,7 @@ maximum repeat unit length and the minimum total repeat length. For each unit
 length, etrf scans an input sequence and obtains a list of non-overlapping
 regions no less than twice of the unit length. For two overlapping regions
 identified with different unit lengths, etrf chooses the longer one, or the one
-found with the shorter unit length if the two regions are identical.
+found with the shorter unit length if the two regions are of equal length.
 
 Unable to find impure tandem repeats, etrf doesn't replace more sophisticated
 tools such as [TRF][trf] or [ULTRA][ultra]. Nonetheless, because etrf
