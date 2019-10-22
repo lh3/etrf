@@ -162,7 +162,7 @@ static void process_seq(int max_motif_len, int min_len, const char *name, int le
 	motif = (char*)malloc(max_motif_len + 1);
 	for (i = 0; i < n_a; ++i) {
 		get_motif(seq, &a[i], motif);
-		printf("%s\t%d\t%d\t%d\t%s\n", name, a[i].st, a[i].en, a[i].k, motif);
+		printf("%s\t%d\t%d\t%d\t%d\t%s\n", name, a[i].st, a[i].en, len, a[i].k, motif);
 	}
 	free(motif);
 	free(a);
